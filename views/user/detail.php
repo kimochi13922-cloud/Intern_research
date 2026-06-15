@@ -2,14 +2,12 @@
 require_once ROOT_DIR . '/functions/common.php';
 require_once ROOT_DIR . '/includes/header.php';
 
-// Get ID from URL
-$id = isset($_GET['id']) ? intval($_GET['id']) : 0;
-
-if ($id <= 0) {
+if (!isset($row) || !$row) {
     echo '<div class="max-w-4xl mx-auto my-8 p-6 bg-red-50 border-l-4 border-red-500 text-red-700 rounded-r-lg shadow-sm font-semibold">ไม่พบข้อมูล หรือ ID ไม่ถูกต้อง (Invalid ID)</div>';
     require_once ROOT_DIR . '/includes/footer.php';
     exit;
 }
+$id = $row['id'];
 ?>
 
 <section class="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 max-w-4xl mx-auto my-6">
@@ -151,13 +149,54 @@ if ($id <= 0) {
         </dl>
     </div>
 
-    <!-- Mobile Back Button -->
-    <div class="mt-6 text-center sm:hidden">
-        <a href="<?php echo BASE_URL; ?>user/research" class="inline-flex items-center px-4 py-2 border border-slate-300 rounded-md text-xs font-bold text-slate-600 bg-white hover:bg-slate-50 transition-all shadow-sm">
-            กลับสู่หน้ารายการ
-        </a>
+</section>
+
+<!-- Document Table Container -->
+<section class="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 max-w-4xl mx-auto my-6">
+    <div class="mb-4">
+        <div class="flex items-center mb-4">
+            <h3 class="text-lg font-bold text-slate-800 flex items-center">
+                <svg class="w-5 h-5 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                ประวัติเอกสาร
+            </h3>
+        </div>
+        
+        <div class="overflow-x-auto border border-gray-200 rounded-lg shadow-sm">
+            <table class="w-full divide-y divide-gray-200 text-xs">
+                <thead class="bg-gray-200 text-gray-700">
+                    <tr>
+                        <th scope="col" class="px-3 py-2 text-left font-semibold whitespace-nowrap">เอกสาร</th>
+                        <th scope="col" class="px-3 py-2 text-left font-semibold whitespace-nowrap">คำอธิบาย</th>
+                        <th scope="col" class="px-3 py-2 text-center font-semibold whitespace-nowrap">ไฟล์เอกสาร</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        
+                        <td class="px-3 py-1.5 text-slate-600 whitespace-nowrap">
+                            <span class="px-1.5 py-0.5 bg-blue-100 text-blue-800 rounded text-[10px] font-semibold">รายงานฉบับสมบูรณ์</span>
+                        </td>
+                        <td class="px-3 py-1.5 text-slate-600">อัปโหลดรายงานวิจัยฉบับสมบูรณ์ (Final Report)</td>
+                        <td class="px-3 py-1.5 text-center whitespace-nowrap">
+                            <a href="#" class="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium">
+                                <svg class="w-4 h-4 mr-1 text-red-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"></path></svg>
+                                ดาวน์โหลด
+                            </a>
+                        </td>
+                    </tr>
+                    
+                </tbody>
+            </table>
+        </div>
     </div>
 </section>
+
+<!-- Mobile Back Button -->
+<div class="mt-6 mb-6 text-center sm:hidden max-w-4xl mx-auto">
+    <a href="<?php echo BASE_URL; ?>user/research" class="inline-flex items-center px-4 py-2 border border-slate-300 rounded-md text-xs font-bold text-slate-600 bg-white hover:bg-slate-50 transition-all shadow-sm">
+        กลับสู่หน้ารายการ
+    </a>
+</div>
 
 <?php
 require_once ROOT_DIR . '/includes/footer.php';

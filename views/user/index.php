@@ -23,7 +23,10 @@ require_once 'includes/header.php';
             </p>
             
             <div class="flex flex-col sm:flex-row justify-center lg:justify-start gap-4">
-                <a href="<?php echo BASE_URL; ?>user/research" class="inline-flex justify-center items-center px-8 py-4 text-base font-bold text-white bg-orange-600 rounded-xl hover:bg-orange-700 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200">
+                <?php 
+                $explore_link = (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true && isset($_SESSION['role']) && $_SESSION['role'] === 'admin') ? 'admin/research' : 'user/research';
+                ?>
+                <a href="<?php echo BASE_URL . $explore_link; ?>" class="inline-flex justify-center items-center px-8 py-4 text-base font-bold text-white bg-orange-600 rounded-xl hover:bg-orange-700 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                     สืบค้นงานวิจัย
                 </a>

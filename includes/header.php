@@ -13,7 +13,7 @@ $current_route = defined('CURRENT_ROUTE') ? CURRENT_ROUTE : 'index';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MOU Database</title>
+    <title>Intern Research</title>
     <!-- Tailwind CSS v3 CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -38,9 +38,15 @@ $current_route = defined('CURRENT_ROUTE') ? CURRENT_ROUTE : 'index';
                 
                 <!-- Navbar Menu -->
                 <div class="flex items-center space-x-2">
-                    <a href="<?php echo BASE_URL; ?>" class="px-3 py-2 rounded-md text-sm font-medium transition-all <?php echo ($current_route == 'index' || $current_route == 'user/index') ? 'bg-orange-50 text-orange-700' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'; ?>">หน้าแรก</a>
+                    <?php 
+                    $home_route = '';
+                    ?>
+                    <a href="<?php echo BASE_URL . $home_route; ?>" class="px-3 py-2 rounded-md text-sm font-medium transition-all <?php echo ($current_route == '' || $current_route == 'index' || $current_route == 'user/index') ? 'bg-orange-50 text-orange-700' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'; ?>">หน้าแรก</a>
                     
-                    <a href="<?php echo BASE_URL; ?>user/research" class="px-3 py-2 rounded-md text-sm font-medium transition-all <?php echo (strpos($current_route, 'research') !== false || strpos($current_route, 'mou_') !== false) ? 'bg-orange-50 text-orange-700' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'; ?>">ฐานข้อมูลโครงงานงานวิจัย</a>
+                    <?php 
+                    $research_link = (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true && isset($_SESSION['role']) && $_SESSION['role'] === 'admin') ? 'admin/research' : 'user/research';
+                    ?>
+                    <a href="<?php echo BASE_URL . $research_link; ?>" class="px-3 py-2 rounded-md text-sm font-medium transition-all <?php echo (strpos($current_route, 'research') !== false || strpos($current_route, 'mou_') !== false) ? 'bg-orange-50 text-orange-700' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'; ?>">ฐานข้อมูลโครงงานงานวิจัย</a>
                     
                     <!-- Auth Logic -->
                     <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true): ?>

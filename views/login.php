@@ -1,29 +1,7 @@
 <?php
-// login.php is now a view included by index.php
+// login.php is now a pure view loaded by AuthController
 require_once ROOT_DIR . '/functions/common.php';
-
-// Redirect if already logged in
-if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
-    header('Location: ' . BASE_URL . 'user/index');
-    exit;
-}
-
-$error = '';
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = isset($_POST['username']) ? trim($_POST['username']) : '';
-    $password = isset($_POST['password']) ? trim($_POST['password']) : '';
-
-    // Hardcoded check (easily changeable to DB later)
-    if (($username === 'test' && $password === 'test') || ($username === 'admin' && $password === 'admin123')) {
-        $_SESSION['logged_in'] = true;
-        $_SESSION['username'] = $username;
-        header('Location: ' . BASE_URL . 'user/index');
-        exit;
-    } else {
-        $error = 'ชื่อผู้ใช้งานหรือรหัสผ่านไม่ถูกต้อง'; // Invalid username/password
-    }
-}
+$error = isset($error) ? $error : '';
 ?>
 <!DOCTYPE html>
 <html lang="th">

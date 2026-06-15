@@ -1,31 +1,70 @@
 <?php
-// core/router.php
+class Router {
+    private $routes = array();
 
-// Parse URL
-$url = isset($_GET['url']) ? rtrim($_GET['url'], '/') : '';
-$url = filter_var($url, FILTER_SANITIZE_URL);
+    public function get($route, $action, $options = array()) {
+        $this->addRoute('GET', $route, $action, $options);
+    }
 
-$route = $url;
+    public function post($route, $action, $options = array()) {
+        $this->addRoute('POST', $route, $action, $options);
+    }
 
-if (empty($route)) {
-    $route = 'user/index';
-}
+    private function addRoute($method, $route, $action, $options) {
+        $this->routes[] = array(
+            'method' => $method,
+            'route' => $route,
+            'action' => $action,
+            'middleware' => isset($options['middleware']) ? $options['middleware'] : null
+        );
+    }
 
-// Security: Prevent directory traversal
-$view_path = realpath(ROOT_DIR . '/views/' . $route . '.php');
-$views_dir = realpath(ROOT_DIR . '/views');
+    public function dispatch($url) {
+        $url = trim($url, '/');
+        if (empty($url)) {
+            $url = '/';
+        }
 
-if ($view_path && strpos($view_path, $views_dir) === 0 && file_exists($view_path)) {
-    // Valid route
-    define('CURRENT_ROUTE', $route);
-    require_once $view_path;
-} else {
-    // 404
-    header("HTTP/1.0 404 Not Found");
-    echo "<div style='text-align:center; padding: 50px; font-family: sans-serif;'>";
-    echo "<h1>404 Not Found</h1>";
-    echo "<p>The page you requested ('" . htmlspecialchars($route) . "') could not be found.</p>";
-    echo "<a href='" . BASE_URL . "'>Go Home</a>";
-    echo "</div>";
+        $method = $_SERVER['REQUEST_METHOD'];
+
+        foreach ($this->routes as $route) {
+            $routePath = trim($route['route'], '/');
+            if (empty($routePath)) {
+                $routePath = '/';
+            }
+
+            if ($routePath === $url && $route['method'] === $method) {
+                // Check middleware
+                if ($route['middleware'] === 'admin') {
+                    if (session_id() == '') { session_start(); }
+                    if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true || !isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+                        if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
+                            header('Location: ' . BASE_URL . 'user/index');
+                        } else {
+                            header('Location: ' . BASE_URL . 'login');
+                        }
+                        exit;
+                    }
+                }
+
+                // Call controller action
+                list($controllerName, $methodName) = explode('@', $route['action']);
+                
+                require_once ROOT_DIR . '/controllers/' . $controllerName . '.php';
+                
+                $controller = new $controllerName();
+                $controller->$methodName();
+                return;
+            }
+        }
+
+        // 404 Not Found
+        header("HTTP/1.0 404 Not Found");
+        echo "<div style='text-align:center; padding: 50px; font-family: sans-serif;'>";
+        echo "<h1>404 Not Found</h1>";
+        echo "<p>The page you requested ('" . htmlspecialchars($url) . "') could not be found.</p>";
+        echo "<a href='" . BASE_URL . "'>Go Home</a>";
+        echo "</div>";
+    }
 }
 ?>

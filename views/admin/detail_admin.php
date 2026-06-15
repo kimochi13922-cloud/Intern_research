@@ -2,14 +2,12 @@
 require_once ROOT_DIR . '/functions/common.php';
 require_once ROOT_DIR . '/includes/header.php';
 
-// Get ID from URL
-$id = isset($_GET['id']) ? intval($_GET['id']) : 0;
-
-if ($id <= 0) {
+if (!isset($row) || !$row) {
     echo '<div class="max-w-4xl mx-auto my-8 p-6 bg-red-50 border-l-4 border-red-500 text-red-700 rounded-r-lg shadow-sm font-semibold">ไม่พบข้อมูล หรือ ID ไม่ถูกต้อง (Invalid ID)</div>';
     require_once ROOT_DIR . '/includes/footer.php';
     exit;
 }
+$id = $row['id'];
 ?>
 
 <section class="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 max-w-5xl mx-auto my-6">
@@ -414,6 +412,23 @@ if ($id <= 0) {
             กลับสู่หน้ารายการ
         </a>
     </div>
+
+    <!-- Danger Zone / Delete Button -->
+    <div class="max-w-5xl mx-auto my-8 p-6 bg-red-50 border border-red-100 rounded-2xl shadow-sm flex flex-col sm:flex-row items-center justify-between">
+        <div>
+            <h3 class="text-lg font-bold text-red-800">Danger Zone</h3>
+            <p class="text-sm text-red-600 mt-1">เมื่อลบข้อมูลแล้วจะไม่สามารถกู้คืนได้ (This action cannot be undone.)</p>
+        </div>
+        <form action="<?php echo BASE_URL; ?>admin/research" method="POST" onsubmit="return confirm('คุณแน่ใจหรือไม่ว่าต้องการลบข้อมูลงานวิจัยนี้? (Are you sure you want to delete this research?)');" class="mt-4 sm:mt-0">
+            <input type="hidden" name="action" value="delete">
+            <input type="hidden" name="id" value="<?php echo $id; ?>">
+            <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-bold text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors">
+                <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                ลบข้อมูลงานวิจัย (Delete Research)
+            </button>
+        </form>
+    </div>
+
     <!-- Upload Modal -->
     <div id="uploadModal" class="fixed inset-0 z-50 hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
         <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
