@@ -11,6 +11,7 @@ $base_path = rtrim(dirname($script_name), '/\\'); // e.g. /intern_research
 define('BASE_URL', $protocol . "://" . $host . $base_path . '/');
 
 // Delegate to router
+require_once ROOT_DIR . '/config/database.php';
 require_once ROOT_DIR . '/core/router.php';
 
 $router = new Router();
@@ -20,6 +21,7 @@ $router->get('/', 'HomeController@index');
 $router->get('user/index', 'HomeController@index');
 $router->get('user/research', 'UserController@research');
 $router->get('user/detail', 'UserController@detail');
+$router->get('user/dashboard', 'UserController@dashboard');
 
 // Auth Routes
 $router->get('login', 'AuthController@showLogin');
@@ -31,6 +33,8 @@ $router->get('admin/research', 'AdminController@research', array('middleware' =>
 $router->post('admin/research', 'AdminController@handleCrud', array('middleware' => 'admin'));
 $router->get('admin/detail', 'AdminController@detail', array('middleware' => 'admin'));
 $router->get('admin/addresearch', 'AdminController@addresearch', array('middleware' => 'admin'));
+$router->get('admin/dashboard', 'AdminController@dashboard', array('middleware' => 'admin'));
+$router->get('admin/download', 'AdminController@download', array('middleware' => 'admin'));
 
 // Parse URL
 $url = isset($_GET['url']) ? $_GET['url'] : '/';

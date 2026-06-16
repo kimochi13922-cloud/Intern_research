@@ -51,9 +51,38 @@ require_once ROOT_DIR . '/includes/header.php';
                 <input type="number" name="citation" class="w-full px-4 py-2 bg-slate-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 focus:bg-white transition-all text-sm" placeholder="ระบุตัวเลข Citation...">
             </div>
 
+            <div>
+                <label class="block text-sm font-semibold text-slate-700 mb-1.5">ตัวชี้วัดที่ 1 (KPI 1)</label>
+                <select name="kpi_1" onchange="this.value === 'อื่นๆ' ? this.nextElementSibling.classList.remove('hidden') : this.nextElementSibling.classList.add('hidden')" class="w-full px-4 py-2 bg-slate-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 focus:bg-white transition-all text-sm">
+                    <option value="">เลือกตัวชี้วัด...</option>
+                    <option value="จำนวนการอ้างอิง (Citations)">จำนวนการอ้างอิง (Citations)</option>
+                    <option value="จำนวนดาวน์โหลด (Downloads)">จำนวนดาวน์โหลด (Downloads)</option>
+                    <option value="Q-Score Journal">Q-Score Journal</option>
+                    <option value="อื่นๆ">อื่นๆ</option>
+                </select>
+                <input type="text" name="kpi_1_other" class="hidden mt-2 w-full px-4 py-2 bg-slate-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 focus:bg-white transition-all text-sm" placeholder="ระบุตัวชี้วัดอื่นๆ...">
+            </div>
+
+            <div>
+                <label class="block text-sm font-semibold text-slate-700 mb-1.5">ตัวชี้วัดที่ 2 (KPI 2)</label>
+                <select name="kpi_2" onchange="this.value === 'อื่นๆ' ? this.nextElementSibling.classList.remove('hidden') : this.nextElementSibling.classList.add('hidden')" class="w-full px-4 py-2 bg-slate-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 focus:bg-white transition-all text-sm">
+                    <option value="">เลือกตัวชี้วัด...</option>
+                    <option value="จำนวนการอ้างอิง (Citations)">จำนวนการอ้างอิง (Citations)</option>
+                    <option value="จำนวนดาวน์โหลด (Downloads)">จำนวนดาวน์โหลด (Downloads)</option>
+                    <option value="Q-Score Journal">Q-Score Journal</option>
+                    <option value="อื่นๆ">อื่นๆ</option>
+                </select>
+                <input type="text" name="kpi_2_other" class="hidden mt-2 w-full px-4 py-2 bg-slate-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 focus:bg-white transition-all text-sm" placeholder="ระบุตัวชี้วัดอื่นๆ...">
+            </div>
+
             <div class="md:col-span-2">
                 <label class="block text-sm font-semibold text-slate-700 mb-1.5">การดำเนินการ (หน่วยงาน)</label>
                 <input type="text" name="operation" class="w-full px-4 py-2 bg-slate-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 focus:bg-white transition-all text-sm" placeholder="เช่น คณะแพทยศาสตร์...">
+            </div>
+            
+            <div class="md:col-span-2">
+                <label class="block text-sm font-semibold text-slate-700 mb-1.5">รายงานวิจัยฉบับสมบูรณ์ (PDF/Word)</label>
+                <input type="file" name="final_report" class="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-orange-50 file:text-orange-700 hover:file:bg-orange-100 border border-gray-300 rounded-lg p-1 bg-slate-50">
             </div>
         </div>
 

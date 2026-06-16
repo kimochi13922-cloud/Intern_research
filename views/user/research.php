@@ -101,14 +101,14 @@ require_once 'includes/header.php';
                 <?php if (isset($result) && $result && $result->num_rows > 0): ?>
                     <?php while ($row = $result->fetch_assoc()): ?>
                         <tr class="hover:bg-slate-50 transition-colors">
-                            <td class="px-4 py-3 text-slate-600 align-top"><?php echo htmlspecialchars($row['year']); ?></td>
+                            <td class="px-4 py-3 text-slate-600 align-top"><?php echo htmlspecialchars($row['publication_year']); ?></td>
                             <td class="px-4 py-3 text-slate-800 font-medium align-top leading-relaxed">
                                 <a href="<?php echo BASE_URL; ?>user/detail?id=<?php echo $row['id']; ?>" class="text-orange-600 hover:text-orange-800 hover:underline transition-colors block mb-1">
-                                    <?php echo htmlspecialchars($row['title']); ?>
+                                    <?php echo htmlspecialchars($row['name']); ?>
                                 </a>
                             </td>
                             <td class="px-4 py-3 text-slate-500 align-top"><?php echo htmlspecialchars($row['authors']); ?></td>
-                            <td class="px-4 py-3 text-slate-500 align-top"><?php echo htmlspecialchars($row['operation']); ?></td>
+                            <td class="px-4 py-3 text-slate-500 align-top"><?php echo htmlspecialchars($row['departments']); ?></td>
                         </tr>
                     <?php endwhile; ?>
                 <?php else: ?>

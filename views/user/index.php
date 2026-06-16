@@ -79,7 +79,7 @@ require_once 'includes/header.php';
 </section>
 
 <!-- Statistics Section -->
-<section class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+<section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
     <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 flex items-center hover:shadow-md transition-shadow">
         <div class="p-4 bg-blue-50 rounded-xl text-blue-600 mr-6">
             <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path></svg>
@@ -109,36 +109,14 @@ require_once 'includes/header.php';
             <h3 class="text-3xl font-extrabold text-slate-800">15,420</h3>
         </div>
     </div>
-</section>
-
-<!-- Additional Info / Features -->
-<section class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 md:p-12">
-    <div class="text-center mb-10">
-        <h2 class="text-2xl md:text-3xl font-bold text-slate-800 mb-4">ทำไมต้องใช้ระบบฐานข้อมูลของเรา?</h2>
-        <p class="text-slate-500 max-w-2xl mx-auto">ระบบถูกออกแบบมาเพื่อรองรับการจัดเก็บ สืบค้น และวิเคราะห์ข้อมูลงานวิจัยได้อย่างมีประสิทธิภาพ</p>
-    </div>
     
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div class="text-center">
-            <div class="w-16 h-16 bg-orange-50 text-orange-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-            </div>
-            <h4 class="text-xl font-bold text-slate-800 mb-2">สืบค้นรวดเร็ว</h4>
-            <p class="text-slate-600 text-sm">ค้นหางานวิจัยด้วยคำสำคัญ ชื่อนักวิจัย หรือแยกตาม SDG ได้อย่างรวดเร็วและแม่นยำ</p>
+    <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 flex items-center hover:shadow-md transition-shadow">
+        <div class="p-4 bg-orange-50 rounded-xl text-orange-600 mr-6">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
         </div>
-        <div class="text-center">
-            <div class="w-16 h-16 bg-orange-50 text-orange-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
-            </div>
-            <h4 class="text-xl font-bold text-slate-800 mb-2">แสดงผลเชิงสถิติ</h4>
-            <p class="text-slate-600 text-sm">สรุปข้อมูลเป็นกราฟและตัวเลข เพื่อให้ผู้บริหารและนักวิจัยนำไปใช้ประโยชน์ต่อได้ทันที</p>
-        </div>
-        <div class="text-center">
-            <div class="w-16 h-16 bg-orange-50 text-orange-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
-            </div>
-            <h4 class="text-xl font-bold text-slate-800 mb-2">ปลอดภัยและเสถียร</h4>
-            <p class="text-slate-600 text-sm">ระบบรักษาความปลอดภัยในการเข้าถึงข้อมูล และจัดการสิทธิ์ผู้ใช้งานได้อย่างรัดกุม</p>
+        <div>
+            <p class="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-1">จำนวนนักวิจัย</p>
+            <h3 class="text-3xl font-extrabold text-slate-800">120</h3>
         </div>
     </div>
 </section>

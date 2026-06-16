@@ -116,6 +116,7 @@ $msg = isset($msg) ? $msg : '';
                     <th scope="col" class="px-4 py-3 text-left font-semibold text-slate-700 border-b border-gray-200 leading-tight">ค่า Quartile</th>
                     <th scope="col" class="px-4 py-3 text-left font-semibold text-slate-700 border-b border-gray-200 leading-tight">ค่า Citation</th>
                     <th scope="col" class="px-4 py-3 text-left font-semibold text-slate-700 border-b border-gray-200 leading-tight">หน่วยงาน</th>
+                    <th scope="col" class="px-4 py-3 text-center font-semibold text-slate-700 border-b border-gray-200 leading-tight">สถานะ</th>
                 </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
@@ -124,13 +125,13 @@ $msg = isset($msg) ? $msg : '';
                         <tr class="hover:bg-slate-50">
                             <td class="px-4 py-3 font-medium text-slate-900">
                                 <a href="<?php echo BASE_URL; ?>admin/detail?id=<?php echo $row['id']; ?>" class="text-orange-600 hover:text-orange-800 hover:underline transition-colors">
-                                    <?php echo escape_html($row['title']); ?>
+                                    <?php echo escape_html($row['name']); ?>
                                 </a>
                             </td>
                             <td class="px-4 py-3 text-slate-600"><?php echo escape_html($row['authors']); ?></td>
-                            <td class="px-4 py-3"><?php echo escape_html($row['year']); ?></td>
-                            <td class="px-4 py-3 text-slate-600"><?php echo escape_html(isset($row['publish_year']) ? $row['publish_year'] : ''); ?></td>
-                            <td class="px-4 py-3 text-slate-600"><?php echo escape_html($row['project_duration']); ?></td>
+                            <td class="px-4 py-3"><?php echo escape_html($row['publication_year']); ?></td>
+                            <td class="px-4 py-3 text-slate-600"><?php echo escape_html(isset($row['release_year']) ? $row['release_year'] : ''); ?></td>
+                            <td class="px-4 py-3 text-slate-600"><?php echo escape_html($row['period']); ?></td>
                             <td class="px-4 py-3 text-slate-600">
                                 <?php if(!empty($row['quartile'])): ?>
                                     <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-purple-100 text-purple-800 border border-purple-200 shadow-sm">
@@ -149,12 +150,23 @@ $msg = isset($msg) ? $msg : '';
                                     <span class="text-gray-400">-</span>
                                 <?php endif; ?>
                             </td>
-                            <td class="px-4 py-3 text-slate-600"><?php echo escape_html($row['operation']); ?></td>
+                            <td class="px-4 py-3 text-slate-600"><?php echo escape_html($row['departments']); ?></td>
+                            <td class="px-4 py-3 text-center">
+                                <?php if (isset($row['vision']) && $row['vision'] == 1): ?>
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-green-100 text-green-800 border border-green-200 shadow-sm">
+                                        เผยแพร่แล้ว
+                                    </span>
+                                <?php else: ?>
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-600 border border-slate-200 shadow-sm">
+                                        ยังไม่เผยแพร่
+                                    </span>
+                                <?php endif; ?>
+                            </td>
                         </tr>
                     <?php endwhile; ?>
                 <?php else: ?>
                     <tr>
-                        <td colspan="8" class="px-4 py-8 text-center text-slate-500">ไม่พบข้อมูล</td>
+                        <td colspan="9" class="px-4 py-8 text-center text-slate-500">ไม่พบข้อมูล</td>
                     </tr>
                 <?php endif; ?>
             </tbody>

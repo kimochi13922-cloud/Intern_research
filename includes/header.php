@@ -48,6 +48,13 @@ $current_route = defined('CURRENT_ROUTE') ? CURRENT_ROUTE : 'index';
                     ?>
                     <a href="<?php echo BASE_URL . $research_link; ?>" class="px-3 py-2 rounded-md text-sm font-medium transition-all <?php echo (strpos($current_route, 'research') !== false || strpos($current_route, 'mou_') !== false) ? 'bg-orange-50 text-orange-700' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'; ?>">ฐานข้อมูลโครงงานงานวิจัย</a>
                     
+                    <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true): ?>
+                        <?php 
+                        $dashboard_link = (isset($_SESSION['role']) && $_SESSION['role'] === 'admin') ? 'admin/dashboard' : 'user/dashboard'; 
+                        ?>
+                        <a href="<?php echo BASE_URL . $dashboard_link; ?>" class="px-3 py-2 rounded-md text-sm font-medium transition-all <?php echo (strpos($current_route, 'dashboard') !== false) ? 'bg-orange-50 text-orange-700' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'; ?>">แดชบอร์ด (Dashboard)</a>
+                    <?php endif; ?>
+                    
                     <!-- Auth Logic -->
                     <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true): ?>
                         <div class="pl-4 ml-2 border-l border-gray-200">
