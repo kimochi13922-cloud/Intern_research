@@ -16,7 +16,7 @@ require_once 'includes/header.php';
             </div>
             <div>
                 <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">งานวิจัยทั้งหมด</p>
-                <h3 class="text-2xl font-extrabold text-slate-800">351</h3>
+                <h3 class="text-2xl font-extrabold text-slate-800"><?php echo number_format($total_research); ?></h3>
             </div>
         </div>
 
@@ -27,7 +27,7 @@ require_once 'includes/header.php';
             </div>
             <div>
                 <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">งบประมาณทั้งหมด</p>
-                <h3 class="text-2xl font-extrabold text-slate-800">100.2M</h3>
+                <h3 class="text-2xl font-extrabold text-slate-800"><?php echo escape_html($total_budget_display); ?></h3>
             </div>
         </div>
 
@@ -38,7 +38,7 @@ require_once 'includes/header.php';
             </div>
             <div>
                 <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">แหล่งงบประมาณ</p>
-                <h3 class="text-2xl font-extrabold text-slate-800">15</h3>
+                <h3 class="text-2xl font-extrabold text-slate-800"><?php echo number_format($total_funding_sources); ?></h3>
             </div>
         </div>
 
@@ -49,7 +49,7 @@ require_once 'includes/header.php';
             </div>
             <div>
                 <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">นักวิจัยทั้งหมด</p>
-                <h3 class="text-2xl font-extrabold text-slate-800">120</h3>
+                <h3 class="text-2xl font-extrabold text-slate-800"><?php echo number_format($total_researchers); ?></h3>
             </div>
         </div>
     </div>
@@ -104,21 +104,102 @@ require_once 'includes/header.php';
             </table>
         </div>
     </div>
+
+    <!-- Researchers Table Section -->
+    <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100 mt-8">
+        <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
+            <h3 class="text-xl font-bold text-slate-800">ตารางนักวิจัย (Researchers)</h3>
+        </div>
+        <div class="overflow-x-auto overflow-y-auto max-h-[500px] border border-slate-200 rounded-lg">
+            <table class="min-w-full bg-white relative">
+                <thead class="bg-slate-100 border-b border-slate-200 sticky top-0 z-10 shadow-sm">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-bold text-slate-600 uppercase tracking-wider">ชื่อ-สกุลนักวิจัย</th>
+                        <th class="px-6 py-3 text-left text-xs font-bold text-slate-600 uppercase tracking-wider">สังกัด/คณะ</th>
+                        <th class="px-6 py-3 text-right text-xs font-bold text-slate-600 uppercase tracking-wider">จำนวนผลงาน</th>
+                    </tr>
+                </thead>
+                <tbody id="researcher-table-body" class="divide-y divide-slate-100">
+                    <!-- JS will populate -->
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
 <!-- Chart.js CDN -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // Plugin to show numbers with callout lines pointing outside the doughnut
+        const doughnutOutlabelsPlugin = {
+            id: 'doughnutOutlabels',
+            afterDraw(chart, args, options) {
+                if (chart.config.type !== 'doughnut') return;
+                const { ctx, data } = chart;
+                
+                chart.data.datasets.forEach((dataset, i) => {
+                    const meta = chart.getDatasetMeta(i);
+                    meta.data.forEach((element, index) => {
+                        const value = dataset.data[index];
+                        if (!value || value <= 0) return;
+                        
+                        const midAngle = element.startAngle + (element.endAngle - element.startAngle) / 2;
+                        const centerX = element.x;
+                        const centerY = element.y;
+                        const radius = element.outerRadius;
+                        
+                        // Calculate start point (on the edge of the doughnut)
+                        const startX = centerX + Math.cos(midAngle) * radius;
+                        const startY = centerY + Math.sin(midAngle) * radius;
+                        
+                        // Line extension length
+                        const lineExtension = 10; 
+                        const endX = centerX + Math.cos(midAngle) * (radius + lineExtension);
+                        const endY = centerY + Math.sin(midAngle) * (radius + lineExtension);
+                        
+                        // Horizontal tail
+                        const tailLength = 10;
+                        const isRightSide = Math.cos(midAngle) > 0;
+                        const tailX = endX + (isRightSide ? tailLength : -tailLength);
+                        
+                        // Draw line
+                        ctx.beginPath();
+                        ctx.moveTo(startX, startY);
+                        ctx.lineTo(endX, endY);
+                        ctx.lineTo(tailX, endY);
+                        ctx.strokeStyle = dataset.backgroundColor[index] || '#64748b';
+                        ctx.lineWidth = 2;
+                        ctx.stroke();
+                        
+                        // Draw text
+                        ctx.fillStyle = '#475569'; // text-slate-600
+                        ctx.font = 'bold 12px "Sarabun", sans-serif';
+                        ctx.textAlign = isRightSide ? 'left' : 'right';
+                        ctx.textBaseline = 'middle';
+                        
+                        const textPadding = 6;
+                        const textX = tailX + (isRightSide ? textPadding : -textPadding);
+                        
+                        const labelText = chart.data.labels[index] || '';
+                        const displayText = labelText + ' (' + value + ')';
+                        
+                        ctx.fillText(displayText, textX, endY);
+                    });
+                });
+            }
+        };
+        Chart.register(doughnutOutlabelsPlugin);
+
         // Chart 1: Bar Chart
         const ctx1 = document.getElementById('researchChart').getContext('2d');
         new Chart(ctx1, {
             type: 'bar',
             data: {
-                labels: ['2022', '2023', '2024', '2025', '2026'],
+                labels: <?php echo json_encode($chart_research_year['labels']); ?>,
                 datasets: [{
                     label: 'จำนวนโครงการวิจัย',
-                    data: [45, 52, 78, 112, 64],
+                    data: <?php echo json_encode($chart_research_year['data']); ?>,
                     backgroundColor: 'rgba(249, 115, 22, 0.7)',
                     borderColor: 'rgba(234, 88, 12, 1)',
                     borderWidth: 1,
@@ -146,10 +227,10 @@ require_once 'includes/header.php';
         new Chart(ctx2, {
             type: 'bar',
             data: {
-                labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+                labels: <?php echo json_encode($chart_quartile['labels']); ?>,
                 datasets: [{
                     label: 'จำนวนบทความตีพิมพ์',
-                    data: [120, 85, 45, 20],
+                    data: <?php echo json_encode($chart_quartile['data']); ?>,
                     borderColor: 'rgba(59, 130, 246, 1)', // Tailwind blue-500
                     backgroundColor: 'rgba(59, 130, 246, 0.2)',
                     borderWidth: 2,
@@ -180,27 +261,24 @@ require_once 'includes/header.php';
         new Chart(doughnutCtx, {
             type: 'doughnut',
             data: {
-                labels: ['คณะวิทยาศาสตร์', 'คณะวิศวกรรมศาสตร์', 'คณะแพทยศาสตร์', 'คณะเกษตรศาสตร์', 'อื่นๆ'],
+                labels: <?php echo json_encode($chart_faculty['labels']); ?>,
                 datasets: [{
                     label: 'จำนวนโครงการวิจัย',
-                    data: [35, 25, 20, 15, 5],
-                    backgroundColor: [
-                        'rgba(59, 130, 246, 0.8)', // blue
-                        'rgba(249, 115, 22, 0.8)', // orange
-                        'rgba(34, 197, 94, 0.8)',  // green
-                        'rgba(234, 179, 8, 0.8)',  // yellow
-                        'rgba(148, 163, 184, 0.8)' // slate
-                    ],
+                    data: <?php echo json_encode($chart_faculty['data']); ?>,
+                    backgroundColor: <?php echo json_encode($chart_faculty['colors']); ?>,
                     borderWidth: 0
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
+                layout: {
+                    padding: { left: 80, right: 80, top: 20, bottom: 20 }
+                },
+                radius: '80%',
                 plugins: {
                     legend: {
-                        position: 'right',
-                        labels: { font: { family: "'Sarabun', sans-serif" } }
+                        display: false
                     },
                     title: {
                         display: true,
@@ -216,10 +294,10 @@ require_once 'includes/header.php';
         new Chart(budgetCtx, {
             type: 'bar',
             data: {
-                labels: ['ปี 2562', 'ปี 2563', 'ปี 2564', 'ปี 2565', 'ปี 2566'],
+                labels: <?php echo json_encode($chart_budget_year['labels']); ?>,
                 datasets: [{
-                    label: 'มูลค่างบประมาณ (บาท)',
-                    data: [15.5, 18.2, 12.0, 24.5, 30.0],
+                    label: 'มูลค่างบประมาณ (ล้านบาท)',
+                    data: <?php echo json_encode($chart_budget_year['data']); ?>,
                     backgroundColor: 'rgba(16, 185, 129, 0.7)', // emerald
                     borderColor: 'rgba(5, 150, 105, 1)',
                     borderWidth: 1,
@@ -243,14 +321,7 @@ require_once 'includes/header.php';
         });
 
         // Funding Table Logic
-        const fundingData = [
-            { name: 'ทุนวิจัยมหาวิทยาลัย', type: 'internal', projects: 45, budget: 15000000 },
-            { name: 'ทุนวิจัยคณะ', type: 'internal', projects: 22, budget: 4500000 },
-            { name: 'สกสว.', type: 'external', projects: 18, budget: 25000000 },
-            { name: 'วช.', type: 'external', projects: 12, budget: 18000000 },
-            { name: 'สวทช.', type: 'external', projects: 8, budget: 12500000 },
-            { name: 'ภาคเอกชน', type: 'external', projects: 15, budget: 25200000 }
-        ];
+        const fundingData = <?php echo json_encode($funding_data); ?>;
 
         window.filterFunding = function(type) {
             // Update buttons
@@ -286,6 +357,25 @@ require_once 'includes/header.php';
 
         // Init table
         filterFunding('all');
+
+        // Researcher Table Logic
+        const researcherData = <?php echo json_encode($top_researchers); ?>;
+
+        function renderResearchers() {
+            const tbody = document.getElementById('researcher-table-body');
+            tbody.innerHTML = '';
+            researcherData.forEach(item => {
+                tbody.innerHTML += `
+                    <tr class="hover:bg-blue-50 transition-colors">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-slate-800">${item.name}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600">${item.faculty}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-800 text-right font-medium">${item.projects}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        renderResearchers();
     });
 </script>
 

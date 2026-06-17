@@ -21,6 +21,7 @@ $router->get('/', 'HomeController@index');
 $router->get('user/index', 'HomeController@index');
 $router->get('user/research', 'UserController@research');
 $router->get('user/detail', 'UserController@detail');
+$router->get('user/download', 'UserController@download');
 $router->get('user/dashboard', 'UserController@dashboard');
 
 // Auth Routes

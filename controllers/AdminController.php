@@ -7,6 +7,12 @@ class AdminController {
         $year = isset($_GET['year']) ? trim($_GET['year']) : '';
         $publish_year = isset($_GET['publish_year']) ? trim($_GET['publish_year']) : '';
         $department = isset($_GET['department']) ? trim($_GET['department']) : '';
+        
+        $period = isset($_GET['period']) ? trim($_GET['period']) : '';
+        $quartile = isset($_GET['quartile']) ? trim($_GET['quartile']) : '';
+        $citation = isset($_GET['citation']) ? trim($_GET['citation']) : '';
+        $progress = isset($_GET['progress']) ? trim($_GET['progress']) : '';
+        $vision = isset($_GET['vision']) ? trim($_GET['vision']) : '';
 
         $sql = "SELECT * FROM research_list WHERE 1=1";
 
@@ -23,9 +29,42 @@ class AdminController {
         if (!empty($department)) {
             $sql .= " AND departments = '" . $conn->real_escape_string($department) . "'";
         }
+        if (!empty($period)) {
+            $sql .= " AND period LIKE '%" . $conn->real_escape_string($period) . "%'";
+        }
+        if (!empty($quartile)) {
+            $sql .= " AND quartile = '" . $conn->real_escape_string($quartile) . "'";
+        }
+        if ($citation !== '') {
+            $sql .= " AND citation = '" . $conn->real_escape_string($citation) . "'";
+        }
+        if (!empty($progress)) {
+            $sql .= " AND progress = '" . $conn->real_escape_string($progress) . "'";
+        }
+        if ($vision !== '') {
+            $sql .= " AND vision = '" . $conn->real_escape_string($vision) . "'";
+        }
 
         $result = $conn->query($sql);
         
+        // Get distinct publication years
+        $year_res = $conn->query("SELECT DISTINCT publication_year FROM research_list WHERE publication_year IS NOT NULL AND publication_year != '' ORDER BY publication_year DESC");
+        $years_list = array();
+        if ($year_res) {
+            while($y = $year_res->fetch_assoc()) {
+                $years_list[] = $y['publication_year'];
+            }
+        }
+        
+        // Get distinct departments
+        $dept_res = $conn->query("SELECT DISTINCT departments FROM research_list WHERE departments IS NOT NULL AND departments != '' ORDER BY departments ASC");
+        $depts_list = array();
+        if ($dept_res) {
+            while($d = $dept_res->fetch_assoc()) {
+                $depts_list[] = $d['departments'];
+            }
+        }
+
         $msg = isset($_SESSION['msg']) ? $_SESSION['msg'] : '';
         unset($_SESSION['msg']);
 
@@ -369,6 +408,106 @@ class AdminController {
 
     public function dashboard() {
         global $conn;
+
+        // 1. Stats Cards Data
+        // Total Research
+        $res = $conn->query("SELECT COUNT(*) as total FROM research_list");
+        $total_research = ($res && $row = $res->fetch_assoc()) ? $row['total'] : 0;
+
+        // Total Budget
+        $res = $conn->query("SELECT SUM(CAST(REPLACE(budget, ',', '') AS DECIMAL(15,2))) as total FROM research_list");
+        $total_budget = ($res && $row = $res->fetch_assoc()) ? $row['total'] : 0;
+        
+        if ($total_budget >= 1000000) {
+            $total_budget_display = round($total_budget / 1000000, 1) . 'M';
+        } else {
+            $total_budget_display = number_format($total_budget);
+        }
+
+        // Total Funding Sources
+        $res = $conn->query("SELECT COUNT(DISTINCT funding_source) as total FROM research_list WHERE funding_source IS NOT NULL AND funding_source != ''");
+        $total_funding_sources = ($res && $row = $res->fetch_assoc()) ? $row['total'] : 0;
+
+        // Total Researchers & Top Researchers Data
+        $res = $conn->query("SELECT authors, departments FROM research_list WHERE authors IS NOT NULL AND authors != ''");
+        $researchers = array();
+        while ($row = $res->fetch_assoc()) {
+            $auths = explode(',', $row['authors']);
+            $dept = $row['departments'];
+            foreach ($auths as $a) {
+                $a = trim($a);
+                if (empty($a)) continue;
+                if (!isset($researchers[$a])) {
+                    $researchers[$a] = array('name' => $a, 'faculty' => $dept, 'projects' => 0);
+                }
+                $researchers[$a]['projects']++;
+            }
+        }
+        $total_researchers = count($researchers);
+        
+        $researcherList = array_values($researchers);
+        $projects_col = array();
+        foreach ($researcherList as $key => $row) {
+            $projects_col[$key] = $row['projects'];
+        }
+        array_multisort($projects_col, SORT_DESC, $researcherList);
+        $top_researchers = array_slice($researcherList, 0, 10);
+
+        // 2. Charts Data
+        // Research by Year
+        $res = $conn->query("SELECT publication_year, COUNT(*) as count FROM research_list WHERE publication_year IS NOT NULL AND publication_year != '' GROUP BY publication_year ORDER BY publication_year ASC");
+        $chart_research_year = array('labels' => array(), 'data' => array());
+        while ($row = $res->fetch_assoc()) {
+            $chart_research_year['labels'][] = $row['publication_year'];
+            $chart_research_year['data'][] = intval($row['count']);
+        }
+
+        // Quartile Stats
+        $res = $conn->query("SELECT quartile, COUNT(*) as count FROM research_list WHERE quartile IS NOT NULL AND quartile != '' GROUP BY quartile ORDER BY quartile ASC");
+        $chart_quartile = array('labels' => array(), 'data' => array());
+        while ($row = $res->fetch_assoc()) {
+            $chart_quartile['labels'][] = $row['quartile'];
+            $chart_quartile['data'][] = intval($row['count']);
+        }
+
+        // Faculty Proportion
+        $res = $conn->query("SELECT departments, COUNT(*) as count FROM research_list WHERE departments IS NOT NULL AND departments != '' GROUP BY departments");
+        $chart_faculty = array('labels' => array(), 'data' => array());
+        $bg_colors = array('rgba(59, 130, 246, 0.8)', 'rgba(249, 115, 22, 0.8)', 'rgba(34, 197, 94, 0.8)', 'rgba(234, 179, 8, 0.8)', 'rgba(148, 163, 184, 0.8)', 'rgba(168, 85, 247, 0.8)', 'rgba(236, 72, 153, 0.8)');
+        $colors_mapped = array();
+        $i = 0;
+        while ($row = $res->fetch_assoc()) {
+            $chart_faculty['labels'][] = $row['departments'];
+            $chart_faculty['data'][] = intval($row['count']);
+            $colors_mapped[] = $bg_colors[$i % count($bg_colors)];
+            $i++;
+        }
+        $chart_faculty['colors'] = $colors_mapped;
+
+        // Budget by Year
+        $res = $conn->query("SELECT publication_year, SUM(CAST(REPLACE(budget, ',', '') AS DECIMAL(15,2))) as total_budget FROM research_list WHERE publication_year IS NOT NULL AND publication_year != '' GROUP BY publication_year ORDER BY publication_year ASC");
+        $chart_budget_year = array('labels' => array(), 'data' => array());
+        while ($row = $res->fetch_assoc()) {
+            $chart_budget_year['labels'][] = 'ปี ' . $row['publication_year'];
+            // Store as millions for the chart if necessary, or full numbers
+            // The mockup chart used 15.5 for 15.5M. Let's send raw and the chart can handle it or we convert to millions
+            $chart_budget_year['data'][] = round(floatval($row['total_budget']) / 1000000, 2);
+        }
+
+        // 3. Funding Sources Table
+        $res = $conn->query("SELECT funding_source, COUNT(*) as projects, SUM(CAST(REPLACE(budget, ',', '') AS DECIMAL(15,2))) as budget FROM research_list WHERE funding_source IS NOT NULL AND funding_source != '' GROUP BY funding_source ORDER BY budget DESC");
+        $funding_data = array();
+        while ($row = $res->fetch_assoc()) {
+            $src = $row['funding_source'];
+            $type = (strpos($src, 'มหาวิทยาลัย') !== false || strpos($src, 'คณะ') !== false) ? 'internal' : 'external';
+            $funding_data[] = array(
+                'name' => $src,
+                'type' => $type,
+                'projects' => intval($row['projects']),
+                'budget' => floatval($row['budget'])
+            );
+        }
+
         require_once ROOT_DIR . '/views/admin/dashboard.php';
     }
 

@@ -70,7 +70,7 @@ $id = $row['id'];
                 </dt>
                 <dd class="mt-1 font-semibold text-slate-900 sm:mt-0 sm:col-span-2 flex items-center">
                     <?php echo escape_html($row['journal']); ?> 
-                    <span class="ml-2 px-1.5 py-0.5 bg-green-100 text-green-800 rounded text-[10px] font-bold"><?php echo escape_html($row['quartile']); ?></span>
+                    
                 </dd>
             </div>
 
@@ -99,10 +99,14 @@ $id = $row['id'];
                     Link บทความ
                 </dt>
                 <dd class="mt-1 font-semibold text-slate-900 sm:mt-0 sm:col-span-2">
-                    <a href="#" target="_blank" class="text-orange-600 hover:text-orange-800 underline flex items-center w-max transition-colors">
+                    <?php if (!empty($row['successpdf'])): ?>
+                    <a href="<?php echo escape_html(BASE_URL . "user/download?id=" . $id . "&field=successpdf"); ?>" target="_blank" class="text-orange-600 hover:text-orange-800 underline flex items-center w-max transition-colors">
                         คลิกเพื่ออ่านบทความ
                         <svg class="w-3.5 h-3.5 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                     </a>
+                    <?php else: ?>
+                    <span class="text-slate-400 text-sm font-normal italic">- ไม่มีไฟล์แนบ -</span>
+                    <?php endif; ?>
                 </dd>
             </div>
 
@@ -113,10 +117,14 @@ $id = $row['id'];
                     รายงานฉบับสมบูรณ์
                 </dt>
                 <dd class="mt-1 font-semibold text-slate-900 sm:mt-0 sm:col-span-2">
-                    <a href="#" class="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium transition-colors">
+                    <?php if (!empty($row['contract'])): ?>
+                    <a href="<?php echo escape_html(BASE_URL . "user/download?id=" . $id . "&field=contract"); ?>" target="_blank" class="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium transition-colors">
                         <svg class="w-4 h-4 mr-1.5 text-red-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"></path></svg>
                         ดาวน์โหลดรายงานฉบับสมบูรณ์ (PDF)
                     </a>
+                    <?php else: ?>
+                    <span class="text-slate-400 text-sm font-normal italic">- ไม่มีไฟล์แนบ -</span>
+                    <?php endif; ?>
                 </dd>
             </div>
 

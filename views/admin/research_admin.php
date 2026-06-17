@@ -13,7 +13,7 @@ $msg = isset($msg) ? $msg : '';
     </div>
 
     <?php
-    $hasAdvanced = (!empty($_GET['year']) || !empty($_GET['publish_year']) || !empty($_GET['department']));
+    $hasAdvanced = (!empty($_GET['year']) || !empty($_GET['publish_year']) || !empty($_GET['department']) || !empty($_GET['period']) || !empty($_GET['quartile']) || (isset($_GET['citation']) && $_GET['citation'] !== '') || !empty($_GET['progress']) || (isset($_GET['vision']) && $_GET['vision'] !== ''));
     ?>
     <!-- Filters Bar -->
     <div class="bg-slate-50 p-4 rounded-xl border border-gray-200 mb-6">
@@ -47,10 +47,9 @@ $msg = isset($msg) ? $msg : '';
                     <label class="block text-xs font-semibold text-slate-600 mb-1.5">ปีที่ตีพิมพ์</label>
                     <select name="year" class="w-full py-2 px-3 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm transition-colors">
                         <option value="">ทั้งหมด</option>
-                        <option value="2026" <?php echo (isset($_GET['year']) && $_GET['year'] == '2026') ? 'selected' : ''; ?>>2026</option>
-                        <option value="2025" <?php echo (isset($_GET['year']) && $_GET['year'] == '2025') ? 'selected' : ''; ?>>2025</option>
-                        <option value="2024" <?php echo (isset($_GET['year']) && $_GET['year'] == '2024') ? 'selected' : ''; ?>>2024</option>
-                        <option value="2023" <?php echo (isset($_GET['year']) && $_GET['year'] == '2023') ? 'selected' : ''; ?>>2023</option>
+                        <?php if (isset($years_list)) { foreach($years_list as $yl): ?>
+                            <option value="<?php echo escape_html($yl); ?>" <?php echo (isset($_GET['year']) && $_GET['year'] == $yl) ? 'selected' : ''; ?>><?php echo escape_html($yl); ?></option>
+                        <?php endforeach; } ?>
                     </select>
                 </div>
 
@@ -59,10 +58,9 @@ $msg = isset($msg) ? $msg : '';
                     <label class="block text-xs font-semibold text-slate-600 mb-1.5">ปีเผยแพร่</label>
                     <select name="publish_year" class="w-full py-2 px-3 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm transition-colors">
                         <option value="">ทั้งหมด</option>
-                        <option value="2026" <?php echo (isset($_GET['publish_year']) && $_GET['publish_year'] == '2026') ? 'selected' : ''; ?>>2026</option>
-                        <option value="2025" <?php echo (isset($_GET['publish_year']) && $_GET['publish_year'] == '2025') ? 'selected' : ''; ?>>2025</option>
-                        <option value="2024" <?php echo (isset($_GET['publish_year']) && $_GET['publish_year'] == '2024') ? 'selected' : ''; ?>>2024</option>
-                        <option value="2023" <?php echo (isset($_GET['publish_year']) && $_GET['publish_year'] == '2023') ? 'selected' : ''; ?>>2023</option>
+                        <?php if (isset($years_list)) { foreach($years_list as $yl): ?>
+                            <option value="<?php echo escape_html($yl); ?>" <?php echo (isset($_GET['publish_year']) && $_GET['publish_year'] == $yl) ? 'selected' : ''; ?>><?php echo escape_html($yl); ?></option>
+                        <?php endforeach; } ?>
                     </select>
                 </div>
 
@@ -71,10 +69,59 @@ $msg = isset($msg) ? $msg : '';
                     <label class="block text-xs font-semibold text-slate-600 mb-1.5">หน่วยงาน</label>
                     <select name="department" class="w-full py-2 px-3 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm transition-colors">
                         <option value="">ทุกหน่วยงาน</option>
-                        <option value="คณะแพทยศาสตร์" <?php echo (isset($_GET['department']) && $_GET['department'] == 'คณะแพทยศาสตร์') ? 'selected' : ''; ?>>คณะแพทยศาสตร์</option>
-                        <option value="คณะเกษตรศาสตร์" <?php echo (isset($_GET['department']) && $_GET['department'] == 'คณะเกษตรศาสตร์') ? 'selected' : ''; ?>>คณะเกษตรศาสตร์</option>
-                        <option value="คณะวิศวกรรมศาสตร์" <?php echo (isset($_GET['department']) && $_GET['department'] == 'คณะวิศวกรรมศาสตร์') ? 'selected' : ''; ?>>คณะวิศวกรรมศาสตร์</option>
-                        <option value="คณะวิทยาศาสตร์" <?php echo (isset($_GET['department']) && $_GET['department'] == 'คณะวิทยาศาสตร์') ? 'selected' : ''; ?>>คณะวิทยาศาสตร์</option>
+                        <?php if (isset($depts_list)) { foreach($depts_list as $dl): ?>
+                            <option value="<?php echo escape_html($dl); ?>" <?php echo (isset($_GET['department']) && $_GET['department'] == $dl) ? 'selected' : ''; ?>><?php echo escape_html($dl); ?></option>
+                        <?php endforeach; } ?>
+                    </select>
+                </div>
+                
+                <!-- Period -->
+                <div class="w-full sm:w-40">
+                    <label class="block text-xs font-semibold text-slate-600 mb-1.5">ระยะเวลาโครงการ</label>
+                    <input type="text" name="period" value="<?php echo isset($_GET['period']) ? escape_html($_GET['period']) : ''; ?>" placeholder="เช่น 1 ปี" class="w-full py-2 px-3 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm transition-colors">
+                </div>
+
+                <!-- Quartile -->
+                <div class="w-full sm:w-32">
+                    <label class="block text-xs font-semibold text-slate-600 mb-1.5">Quartile</label>
+                    <select name="quartile" class="w-full py-2 px-3 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm transition-colors">
+                        <option value="">ทั้งหมด</option>
+                        <option value="Q1" <?php echo (isset($_GET['quartile']) && $_GET['quartile'] == 'Q1') ? 'selected' : ''; ?>>Q1</option>
+                        <option value="Q2" <?php echo (isset($_GET['quartile']) && $_GET['quartile'] == 'Q2') ? 'selected' : ''; ?>>Q2</option>
+                        <option value="Q3" <?php echo (isset($_GET['quartile']) && $_GET['quartile'] == 'Q3') ? 'selected' : ''; ?>>Q3</option>
+                        <option value="Q4" <?php echo (isset($_GET['quartile']) && $_GET['quartile'] == 'Q4') ? 'selected' : ''; ?>>Q4</option>
+                    </select>
+                </div>
+
+                <!-- Citation -->
+                <div class="w-full sm:w-32">
+                    <label class="block text-xs font-semibold text-slate-600 mb-1.5">Citation</label>
+                    <input type="number" name="citation" value="<?php echo isset($_GET['citation']) ? escape_html($_GET['citation']) : ''; ?>" placeholder="ระบุตัวเลข" class="w-full py-2 px-3 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm transition-colors">
+                </div>
+
+                <!-- Progress -->
+                <div class="w-full sm:w-40">
+                    <label class="block text-xs font-semibold text-slate-600 mb-1.5">สถานะโครงการ</label>
+                    <select name="progress" class="w-full py-2 px-3 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm transition-colors">
+                        <option value="">ทั้งหมด</option>
+                        <option value="เสนอโครงร่าง" <?php echo (isset($_GET['progress']) && $_GET['progress'] == 'เสนอโครงร่าง') ? 'selected' : ''; ?>>เสนอโครงร่าง</option>
+                        <option value="กำลังดำเนินการ" <?php echo (isset($_GET['progress']) && $_GET['progress'] == 'กำลังดำเนินการ') ? 'selected' : ''; ?>>กำลังดำเนินการ</option>
+                        <option value="รอตีพิมพ์" <?php echo (isset($_GET['progress']) && $_GET['progress'] == 'รอตีพิมพ์') ? 'selected' : ''; ?>>รอตีพิมพ์</option>
+                        <option value="อยู่ระหว่างตีพิมพ์" <?php echo (isset($_GET['progress']) && $_GET['progress'] == 'อยู่ระหว่างตีพิมพ์') ? 'selected' : ''; ?>>อยู่ระหว่างตีพิมพ์</option>
+                        <option value="ตีพิมพ์แล้ว" <?php echo (isset($_GET['progress']) && $_GET['progress'] == 'ตีพิมพ์แล้ว') ? 'selected' : ''; ?>>ตีพิมพ์แล้ว</option>
+                        <option value="เสร็จสิ้น" <?php echo (isset($_GET['progress']) && $_GET['progress'] == 'เสร็จสิ้น') ? 'selected' : ''; ?>>เสร็จสิ้น</option>
+                        <option value="เสร็จสมบูรณ์" <?php echo (isset($_GET['progress']) && $_GET['progress'] == 'เสร็จสมบูรณ์') ? 'selected' : ''; ?>>เสร็จสมบูรณ์</option>
+                        <option value="ยกเลิก" <?php echo (isset($_GET['progress']) && $_GET['progress'] == 'ยกเลิก') ? 'selected' : ''; ?>>ยกเลิก</option>
+                    </select>
+                </div>
+
+                <!-- Vision (Status) -->
+                <div class="w-full sm:w-32">
+                    <label class="block text-xs font-semibold text-slate-600 mb-1.5">สถานะ</label>
+                    <select name="vision" class="w-full py-2 px-3 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm transition-colors">
+                        <option value="">ทั้งหมด</option>
+                        <option value="1" <?php echo (isset($_GET['vision']) && $_GET['vision'] == '1') ? 'selected' : ''; ?>>เผยแพร่แล้ว</option>
+                        <option value="0" <?php echo (isset($_GET['vision']) && $_GET['vision'] == '0') ? 'selected' : ''; ?>>ยังไม่เผยแพร่</option>
                     </select>
                 </div>
 

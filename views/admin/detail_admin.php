@@ -162,15 +162,28 @@ $id = $row['id'];
                 </dd>
             </div>
 
-            <!-- Field 5 -->
+            <!-- Field 4.75 (Period) -->
             <div class="bg-gray-50 px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 items-center">
+                <dt class="font-bold text-slate-500 flex items-start break-words whitespace-normal pt-1">
+                    <svg class="w-4 h-4 mr-1.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    วันเริ่มต้น - สิ้นสุดโครงการ
+                </dt>
+                <dd class="mt-1 font-semibold text-slate-900 sm:mt-0 sm:col-span-2 flex items-center justify-between min-w-0">
+                    <span class="break-words break-all whitespace-normal flex-1 min-w-0 pr-2 block"><?php echo isset($row['period']) ? escape_html($row['period']) : "-"; ?></span><button type="button" class="edit-inline-btn text-blue-500 hover:text-blue-700 transition-colors p-1 rounded-md hover:bg-blue-50 block" data-field="period" title="แก้ไข">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                    </button>
+                </dd>
+            </div>
+
+            <!-- Field 5 -->
+            <div class="bg-white px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 items-center">
                 <dt class="font-bold text-slate-500 flex items-start break-words whitespace-normal pt-1">
                     <svg class="w-4 h-4 mr-1.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5m0 0l5 5m-5-5v12"></path></svg>
                     จำนวน Citation
                 </dt>
                 <dd class="mt-1 font-semibold text-slate-900 sm:mt-0 sm:col-span-2 flex items-center justify-between min-w-0">
-                    <span class="break-words break-all whitespace-normal flex-1 min-w-0 pr-2 block">15 ครั้ง</span>
-                    <button type="button" class="edit-inline-btn text-blue-500 hover:text-blue-700 transition-colors p-1 rounded-md hover:bg-blue-50 block" data-field="abstract" title="แก้ไข"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg></button>
+                    <span class="break-words break-all whitespace-normal flex-1 min-w-0 pr-2 block"><?php echo (isset($row['citation']) && $row['citation'] !== '') ? escape_html($row['citation']) : "-"; ?></span>
+                    <button type="button" class="edit-inline-btn text-blue-500 hover:text-blue-700 transition-colors p-1 rounded-md hover:bg-blue-50 block" data-field="citation" title="แก้ไข"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg></button>
                 </dd>
             </div>
 
@@ -208,8 +221,12 @@ $id = $row['id'];
                 </dt>
                 <dd class="mt-1 font-semibold text-slate-900 sm:mt-0 sm:col-span-2 flex items-center justify-between min-w-0">
                     
-<span class="hidden"><?php echo isset($row['successpdf']) ? "file" : ""; ?></span>
-<a href="<?php echo (isset($row['successpdf']) && !empty($row['successpdf'])) ? escape_html(BASE_URL . "admin/download?id=" . $id . "&field=successpdf") : "#"; ?>" target="_blank" class="text-orange-600 hover:text-orange-800 underline flex items-center w-max transition-colors">คลิกเพื่ออ่านบทความ</a>
+<span class="hidden"><?php echo (isset($row['successpdf']) && !empty($row['successpdf'])) ? "file" : ""; ?></span>
+<?php if (isset($row['successpdf']) && !empty($row['successpdf'])): ?>
+<a href="<?php echo escape_html(BASE_URL . "admin/download?id=" . $id . "&field=successpdf"); ?>" target="_blank" class="text-orange-600 hover:text-orange-800 underline flex items-center w-max transition-colors">คลิกเพื่ออ่านบทความ</a>
+<?php else: ?>
+<span class="text-slate-400 text-sm font-normal italic">- ไม่มีไฟล์แนบ -</span>
+<?php endif; ?>
 <button type="button" class="edit-inline-btn text-blue-500 hover:text-blue-700 transition-colors p-1 rounded-md hover:bg-blue-50 block" data-field="successpdf" title="แก้ไข">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
                     </button>
@@ -224,8 +241,12 @@ $id = $row['id'];
                 </dt>
                 <dd class="mt-1 font-semibold text-slate-900 sm:mt-0 sm:col-span-2 flex items-center justify-between min-w-0">
                     
-<span class="hidden"><?php echo isset($row['contract']) ? "file" : ""; ?></span>
-<a href="<?php echo (isset($row['contract']) && !empty($row['contract'])) ? escape_html(BASE_URL . "admin/download?id=" . $id . "&field=contract") : "#"; ?>" target="_blank" class="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium transition-colors">ดาวน์โหลดเอกสารสัญญา (PDF)</a>
+<span class="hidden"><?php echo (isset($row['contract']) && !empty($row['contract'])) ? "file" : ""; ?></span>
+<?php if (isset($row['contract']) && !empty($row['contract'])): ?>
+<a href="<?php echo escape_html(BASE_URL . "admin/download?id=" . $id . "&field=contract"); ?>" target="_blank" class="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium transition-colors">ดาวน์โหลดเอกสารสัญญา (PDF)</a>
+<?php else: ?>
+<span class="text-slate-400 text-sm font-normal italic">- ไม่มีไฟล์แนบ -</span>
+<?php endif; ?>
 <button type="button" class="edit-inline-btn text-blue-500 hover:text-blue-700 transition-colors p-1 rounded-md hover:bg-blue-50 block" data-field="contract" title="แก้ไข">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
                     </button>
@@ -471,7 +492,11 @@ $id = $row['id'];
                                     </div>
                                     <div class="mb-4">
                                         <label class="block text-sm font-semibold text-slate-700 mb-1">ไฟล์เอกสาร (File) <span class="text-red-500">*</span></label>
-                                        <input type="file" name="doc_file" required class="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 border border-gray-300 rounded-md p-1">
+                                        <input type="file" name="doc_file" required class="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 border border-gray-300 rounded-md p-1" onchange="window.showFileAttached(this)">
+                                        <div class="file-status text-green-600 text-sm font-bold mt-2 hidden flex items-center">
+                                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                            <span>แนบไฟล์แล้ว: <span class="file-name font-normal"></span></span>
+                                        </div>
                                     </div>
                             </div>
                         </div>
@@ -542,7 +567,11 @@ $id = $row['id'];
                                     <!-- File upload -->
                                     <div>
                                         <label class="block text-sm font-semibold text-slate-700 mb-1.5">แนบไฟล์หลักฐาน (PDF)</label>
-                                        <input type="file" name="kpi_file" accept=".pdf" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 transition-colors border border-gray-200 rounded-lg">
+                                        <input type="file" name="kpi_file" accept=".pdf" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 transition-colors border border-gray-200 rounded-lg" onchange="window.showFileAttached(this)">
+                                        <div class="file-status text-green-600 text-sm font-bold mt-2 hidden flex items-center">
+                                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                            <span>แนบไฟล์แล้ว: <span class="file-name font-normal"></span></span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -612,6 +641,39 @@ $id = $row['id'];
         modal.classList.remove('hidden');
     }
     
+    window.showFileAttached = function(input) {
+        const statusDiv = input.parentElement.querySelector('.file-status');
+        if (!statusDiv) return;
+        const nameSpan = statusDiv.querySelector('.file-name');
+        if(input.files && input.files.length > 0) {
+            nameSpan.textContent = input.files[0].name;
+            statusDiv.classList.remove('hidden');
+        } else {
+            statusDiv.classList.add('hidden');
+        }
+    };
+
+    window.updateInlinePeriod = function() {
+        const start = document.getElementById('inline_start_date').value;
+        const end = document.getElementById('inline_end_date').value;
+        const valInput = document.getElementById('inline_period_value');
+        
+        const formatDate = (d) => {
+            if(!d) return '';
+            const p = d.split('-');
+            if(p.length === 3) return p[2] + '/' + p[1] + '/' + p[0];
+            return d;
+        };
+        
+        const fStart = formatDate(start);
+        const fEnd = formatDate(end);
+        
+        if (fStart && fEnd) valInput.value = fStart + ' - ' + fEnd;
+        else if (fStart) valInput.value = fStart;
+        else if (fEnd) valInput.value = fEnd;
+        else valInput.value = '';
+    };
+
     document.querySelectorAll('.edit-inline-btn').forEach(btn => {
         btn.addEventListener('click', function(e) {
             e.preventDefault();
@@ -626,11 +688,20 @@ $id = $row['id'];
             const isFile = field === 'successpdf' || field === 'contract';
             const isTextarea = field === 'abstract' || field === 'authors';
             const isProgress = field === 'progress';
+            const isPeriod = field === 'period';
             const numRows = field === 'abstract' ? 10 : 3;
 
             let inputHtml = '';
             if (isFile) {
-                inputHtml = `<input type="file" name="file_upload" class="w-full text-sm text-slate-500 file:mr-4 file:py-1 file:px-2 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">`;
+                inputHtml = `
+                    <div class="w-full">
+                        <input type="file" name="file_upload" class="w-full text-sm text-slate-500 file:mr-4 file:py-1 file:px-2 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100" onchange="window.showFileAttached(this)">
+                        <div class="file-status text-green-600 text-xs font-bold mt-1 hidden flex items-center">
+                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            <span>แนบไฟล์แล้ว: <span class="file-name font-normal"></span></span>
+                        </div>
+                    </div>
+                `;
             } else if (isProgress) {
                 inputHtml = `
                 <select name="value" class="w-full px-2 py-1 text-sm border border-orange-300 rounded focus:outline-none focus:ring-1 focus:ring-orange-500">
@@ -644,6 +715,35 @@ $id = $row['id'];
                 </select>`;
             } else if (isTextarea) {
                 inputHtml = `<textarea name="value" class="w-full px-2 py-1 text-sm border border-orange-300 rounded focus:outline-none focus:ring-1 focus:ring-orange-500" rows="${numRows}">${originalText}</textarea>`;
+            } else if (isPeriod) {
+                let startVal = '';
+                let endVal = '';
+                if (originalText.includes(' - ')) {
+                    const parts = originalText.split(' - ');
+                    const parseDate = (d) => {
+                        const p = d.split('/');
+                        if(p.length === 3) return p[2] + '-' + p[1] + '-' + p[0];
+                        return d.includes('-') ? d : '';
+                    };
+                    startVal = parseDate(parts[0].trim());
+                    endVal = parseDate(parts[1].trim());
+                } else if (originalText.includes('/')) {
+                    const p = originalText.trim().split('/');
+                    if(p.length === 3) startVal = p[2] + '-' + p[1] + '-' + p[0];
+                } else {
+                    startVal = originalText.trim();
+                }
+                
+                inputHtml = `
+                    <div class="flex flex-wrap items-center gap-2 w-full">
+                        <input type="date" id="inline_start_date" value="${startVal}" class="flex-1 min-w-[120px] px-2 py-1 text-sm border border-orange-300 rounded focus:outline-none focus:ring-1 focus:ring-orange-500" onchange="window.updateInlinePeriod()">
+                        <span class="text-gray-500 font-bold">-</span>
+                        <input type="date" id="inline_end_date" value="${endVal}" class="flex-1 min-w-[120px] px-2 py-1 text-sm border border-orange-300 rounded focus:outline-none focus:ring-1 focus:ring-orange-500" onchange="window.updateInlinePeriod()">
+                    </div>
+                    <input type="hidden" name="value" id="inline_period_value" value="${safeText}">
+                `;
+            } else if (field === 'publication_year' || field === 'release_year') {
+                inputHtml = `<input type="text" name="value" value="${safeText}" pattern="[0-9]*" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '');" class="w-full px-2 py-1 text-sm border border-orange-300 rounded focus:outline-none focus:ring-1 focus:ring-orange-500">`;
             } else {
                 inputHtml = `<input type="text" name="value" value="${safeText}" class="w-full px-2 py-1 text-sm border border-orange-300 rounded focus:outline-none focus:ring-1 focus:ring-orange-500">`;
             }

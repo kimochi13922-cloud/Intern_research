@@ -24,6 +24,66 @@ require_once 'includes/header.php';
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // Plugin to show numbers with callout lines pointing outside the doughnut
+        const doughnutOutlabelsPlugin = {
+            id: 'doughnutOutlabels',
+            afterDraw(chart, args, options) {
+                if (chart.config.type !== 'doughnut') return;
+                const { ctx, data } = chart;
+                
+                chart.data.datasets.forEach((dataset, i) => {
+                    const meta = chart.getDatasetMeta(i);
+                    meta.data.forEach((element, index) => {
+                        const value = dataset.data[index];
+                        if (!value || value <= 0) return;
+                        
+                        const midAngle = element.startAngle + (element.endAngle - element.startAngle) / 2;
+                        const centerX = element.x;
+                        const centerY = element.y;
+                        const radius = element.outerRadius;
+                        
+                        // Calculate start point (on the edge of the doughnut)
+                        const startX = centerX + Math.cos(midAngle) * radius;
+                        const startY = centerY + Math.sin(midAngle) * radius;
+                        
+                        // Line extension length
+                        const lineExtension = 10; 
+                        const endX = centerX + Math.cos(midAngle) * (radius + lineExtension);
+                        const endY = centerY + Math.sin(midAngle) * (radius + lineExtension);
+                        
+                        // Horizontal tail
+                        const tailLength = 10;
+                        const isRightSide = Math.cos(midAngle) > 0;
+                        const tailX = endX + (isRightSide ? tailLength : -tailLength);
+                        
+                        // Draw line
+                        ctx.beginPath();
+                        ctx.moveTo(startX, startY);
+                        ctx.lineTo(endX, endY);
+                        ctx.lineTo(tailX, endY);
+                        ctx.strokeStyle = dataset.backgroundColor[index] || '#64748b';
+                        ctx.lineWidth = 2;
+                        ctx.stroke();
+                        
+                        // Draw text
+                        ctx.fillStyle = '#475569'; // text-slate-600
+                        ctx.font = 'bold 12px "Sarabun", sans-serif';
+                        ctx.textAlign = isRightSide ? 'left' : 'right';
+                        ctx.textBaseline = 'middle';
+                        
+                        const textPadding = 6;
+                        const textX = tailX + (isRightSide ? textPadding : -textPadding);
+                        
+                        const labelText = chart.data.labels[index] || '';
+                        const displayText = labelText + ' (' + value + ')';
+                        
+                        ctx.fillText(displayText, textX, endY);
+                    });
+                });
+            }
+        };
+        Chart.register(doughnutOutlabelsPlugin);
+
         const ctx = document.getElementById('researchChart').getContext('2d');
         const researchChart = new Chart(ctx, {
             type: 'bar',
@@ -97,10 +157,13 @@ require_once 'includes/header.php';
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
+                layout: {
+                    padding: { left: 80, right: 80, top: 20, bottom: 20 }
+                },
+                radius: '80%',
                 plugins: {
                     legend: {
-                        position: 'right',
-                        labels: { font: { family: "'Sarabun', sans-serif" } }
+                        display: false
                     },
                     title: {
                         display: true,

@@ -10,7 +10,7 @@ require_once 'includes/header.php';
     </div>
 
     <?php
-    $hasAdvanced = (!empty($_GET['year']) || !empty($_GET['department']));
+    $hasAdvanced = (!empty($_GET['year']) || !empty($_GET['publish_year']) || !empty($_GET['department']) || !empty($_GET['period']) || !empty($_GET['quartile']) || (isset($_GET['citation']) && $_GET['citation'] !== '') || !empty($_GET['progress']));
     ?>
     <!-- Filters Bar -->
     <div class="bg-slate-50 p-4 rounded-xl border border-gray-200 mb-6">
@@ -39,15 +39,14 @@ require_once 'includes/header.php';
 
             <!-- Advanced Filters Row -->
             <div id="advancedFilters" class="<?php echo $hasAdvanced ? 'flex' : 'hidden'; ?> flex-wrap gap-4 items-end pt-4 mt-4 border-t border-gray-200">
-                <!-- Year -->
+                <!-- Publication Year -->
                 <div class="w-full sm:w-32">
                     <label class="block text-xs font-semibold text-slate-600 mb-1.5">ปีที่ตีพิมพ์</label>
                     <select name="year" class="w-full py-2 px-3 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm transition-colors">
                         <option value="">ทั้งหมด</option>
-                        <option value="2026" <?php echo (isset($_GET['year']) && $_GET['year'] == '2026') ? 'selected' : ''; ?>>2026</option>
-                        <option value="2025" <?php echo (isset($_GET['year']) && $_GET['year'] == '2025') ? 'selected' : ''; ?>>2025</option>
-                        <option value="2024" <?php echo (isset($_GET['year']) && $_GET['year'] == '2024') ? 'selected' : ''; ?>>2024</option>
-                        <option value="2023" <?php echo (isset($_GET['year']) && $_GET['year'] == '2023') ? 'selected' : ''; ?>>2023</option>
+                        <?php if (isset($years_list)) { foreach($years_list as $yl): ?>
+                            <option value="<?php echo escape_html($yl); ?>" <?php echo (isset($_GET['year']) && $_GET['year'] == $yl) ? 'selected' : ''; ?>><?php echo escape_html($yl); ?></option>
+                        <?php endforeach; } ?>
                     </select>
                 </div>
 
@@ -56,13 +55,13 @@ require_once 'includes/header.php';
                     <label class="block text-xs font-semibold text-slate-600 mb-1.5">หน่วยงาน</label>
                     <select name="department" class="w-full py-2 px-3 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm transition-colors">
                         <option value="">ทุกหน่วยงาน</option>
-                        <option value="คณะแพทยศาสตร์" <?php echo (isset($_GET['department']) && $_GET['department'] == 'คณะแพทยศาสตร์') ? 'selected' : ''; ?>>คณะแพทยศาสตร์</option>
-                        <option value="คณะเกษตรศาสตร์" <?php echo (isset($_GET['department']) && $_GET['department'] == 'คณะเกษตรศาสตร์') ? 'selected' : ''; ?>>คณะเกษตรศาสตร์</option>
-                        <option value="คณะวิศวกรรมศาสตร์" <?php echo (isset($_GET['department']) && $_GET['department'] == 'คณะวิศวกรรมศาสตร์') ? 'selected' : ''; ?>>คณะวิศวกรรมศาสตร์</option>
-                        <option value="คณะวิทยาศาสตร์" <?php echo (isset($_GET['department']) && $_GET['department'] == 'คณะวิทยาศาสตร์') ? 'selected' : ''; ?>>คณะวิทยาศาสตร์</option>
+                        <?php if (isset($depts_list)) { foreach($depts_list as $dl): ?>
+                            <option value="<?php echo escape_html($dl); ?>" <?php echo (isset($_GET['department']) && $_GET['department'] == $dl) ? 'selected' : ''; ?>><?php echo escape_html($dl); ?></option>
+                        <?php endforeach; } ?>
                     </select>
                 </div>
 
+                
                 <button type="submit" class="w-full sm:w-auto px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white font-semibold rounded-lg shadow-sm text-sm transition-colors flex items-center justify-center">
                     <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path></svg>
                     นำไปใช้
