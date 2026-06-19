@@ -93,11 +93,7 @@ $msg = isset($msg) ? $msg : '';
                     </select>
                 </div>
 
-                <!-- Citation -->
-                <div class="w-full sm:w-32">
-                    <label class="block text-xs font-semibold text-slate-600 mb-1.5">Citation</label>
-                    <input type="number" name="citation" value="<?php echo isset($_GET['citation']) ? escape_html($_GET['citation']) : ''; ?>" placeholder="ระบุตัวเลข" class="w-full py-2 px-3 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm transition-colors">
-                </div>
+                
 
                 <!-- Progress -->
                 <div class="w-full sm:w-40">
@@ -161,7 +157,7 @@ $msg = isset($msg) ? $msg : '';
                     <th scope="col" class="px-4 py-3 text-left font-semibold text-slate-700 border-b border-gray-200 leading-tight">ปีเผยแพร่</th>
                     <th scope="col" class="px-4 py-3 text-left font-semibold text-slate-700 border-b border-gray-200 leading-tight">วันเริ่มต้น - สิ้นสุดโครงการ</th>
                     <th scope="col" class="px-4 py-3 text-left font-semibold text-slate-700 border-b border-gray-200 leading-tight">ค่า Quartile</th>
-                    <th scope="col" class="px-4 py-3 text-left font-semibold text-slate-700 border-b border-gray-200 leading-tight">ค่า Citation</th>
+                    <th scope="col" class="px-4 py-3 text-left font-semibold text-slate-700 border-b border-gray-200 leading-tight max-w-[200px] whitespace-normal break-words">แหล่งทุน</th>
                     <th scope="col" class="px-4 py-3 text-left font-semibold text-slate-700 border-b border-gray-200 leading-tight">หน่วยงาน</th>
                     <th scope="col" class="px-4 py-3 text-center font-semibold text-slate-700 border-b border-gray-200 leading-tight">สถานะ</th>
                 </tr>
@@ -188,11 +184,9 @@ $msg = isset($msg) ? $msg : '';
                                     <span class="text-gray-400">-</span>
                                 <?php endif; ?>
                             </td>
-                            <td class="px-4 py-3 text-slate-600">
-                                <?php if($row['citation'] !== '' && $row['citation'] !== null): ?>
-                                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-blue-100 text-blue-800 border border-blue-200 shadow-sm">
-                                        <?php echo escape_html($row['citation']); ?>
-                                    </span>
+                            <td class="px-4 py-3 text-slate-600 max-w-[200px] whitespace-normal break-words">
+                                <?php if(!empty($row['funding_source'])): ?>
+                                    <?php echo escape_html($row['funding_source']); ?>
                                 <?php else: ?>
                                     <span class="text-gray-400">-</span>
                                 <?php endif; ?>

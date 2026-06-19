@@ -346,7 +346,11 @@ require_once 'includes/header.php';
                 
                 tbody.innerHTML += `
                     <tr class="hover:bg-orange-50 transition-colors">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-slate-800">${item.name}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-slate-800">
+                            <a href="<?php echo BASE_URL; ?>admin/research?search=${encodeURIComponent(item.name)}" class="text-orange-600 hover:text-orange-800 hover:underline transition-colors cursor-pointer">
+                                ${item.name}
+                            </a>
+                        </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm">${typeLabel}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600 text-right font-medium">${item.projects}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-800 font-bold text-right">${item.budget.toLocaleString()}</td>
@@ -367,7 +371,11 @@ require_once 'includes/header.php';
             researcherData.forEach(item => {
                 tbody.innerHTML += `
                     <tr class="hover:bg-blue-50 transition-colors">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-slate-800">${item.name}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-slate-800">
+                            <a href="<?php echo BASE_URL; ?>admin/research?search=${encodeURIComponent(item.name)}" class="text-blue-600 hover:text-blue-800 hover:underline transition-colors cursor-pointer">
+                                ${item.name}
+                            </a>
+                        </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600">${item.faculty}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-800 text-right font-medium">${item.projects}</td>
                     </tr>

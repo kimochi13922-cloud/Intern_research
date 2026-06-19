@@ -18,7 +18,7 @@ class AdminController {
 
         if (!empty($search)) {
             $searchEscaped = $conn->real_escape_string($search);
-            $sql .= " AND (name LIKE '%$searchEscaped%' OR authors LIKE '%$searchEscaped%')";
+            $sql .= " AND (name LIKE '%$searchEscaped%' OR authors LIKE '%$searchEscaped%' OR funding_source LIKE '%$searchEscaped%')";
         }
         if (!empty($year)) {
             $sql .= " AND publication_year = '" . $conn->real_escape_string($year) . "'";

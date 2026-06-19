@@ -686,7 +686,7 @@ $id = $row['id'];
             const field = this.dataset.field;
             
             const isFile = field === 'successpdf' || field === 'contract';
-            const isTextarea = field === 'abstract' || field === 'authors';
+            const isTextarea = field === 'abstract' || field === 'authors' || field === 'funding_source';
             const isProgress = field === 'progress';
             const isPeriod = field === 'period';
             const numRows = field === 'abstract' ? 10 : 3;
